@@ -1,5 +1,5 @@
 # Final Project - Project Proposal
-##### Jeremy Tan, Marie Kang, Carlos Alejandros Palma Bernal 
+##### Jeremy Tan, Marie Kang, Carlos Palma Bernal 
 
 Story Pitch: 
 
