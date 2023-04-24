@@ -7,27 +7,6 @@ Story Pitch:
 Through our research, we discovered that the current FBI datasets actually undercounted fatal police shootings by more than half. Therefore, our team found a dataset that is transparently and accurately compiled of exact incidents which can then be filtered by state, city, police department, and more. We will utilize this dataset to track the deaths per state and further compare it with a second dataset that lists the required police training by state. This second dataset will be a combined dataset from the Census of State and Local Law Enforcement Training Academies from the time frame of 2013 to 2022. The second dataset lists the hours of training and even types of training required to execute their line of work. This second dataset goes further into detail with the types of police training required by state which will be compared to the first dataset in order to determine if the specific kind of training may also affect police brutality rates. We plan to specifically locate certain years in which there was a change in police training requirements and how that may have altered the results of police brutality. Our data analysis will reveal a closer look into the details in police training requirements in order to gauge a deeper understanding of why police brutality incidents have risen over the years. 
 Our team believes that police brutality is a severe issue that is often overlooked, and hence needs further attention and analysis. 0.5% of encounters between police forces and civilians result in violence, and although that numeric percentage is seemingly miniscule, that results in thousands of deaths and incidents that could have been avoided. More importantly, it is an urgent issue that impacts those in minority communities and of color. Although factors such as racism are clear reasons for police brutality, we are specifically focusing on police training requirements because changing the police training curriculum is far more productive and realistic in comparison to “ending” racism. With our deeper understanding and analysis, we hope to find results that prompt and inspire a positive change within our society and police academies. 
 
-
-
-Does lack of police training affect police brutality? 
-Current: peak interest rise of police brutality 
-Other points to consider besides lack of police training: racism, mental issues, entitlement 
-Can a change in police enforcement/training alter police behavior? 
-Has there been a decline in police training requirements? If so, has there been a correlating rise in police brutality as officers are less trained? 
-
-Section A: General demographic of victims of police brutality? 
-Age 
-Race
-Neighborhood
-
-Section B: Calculations of police training by location (state/county) 
-What state has the most rigorous police training? 
-Is training harder for women or for men? Based on the findings (if applicable) is police brutality more prevalent in female or male officers? 
-
-Section B: Police brutality on the general public
-Is there a correspondence between police training and victims? 
-Is there a correspondence between female and male officers? Does their training affect this? 
-
 Background Research: 
 https://www.washingtonpost.com/graphics/investigations/police-shootings-database/ 
 Shows that the FBI databases UNDERCOUNT police shootings. As a result, the Post started their own dataset collection by year that is more accurate. This can be compared to our proposal as we are utilizing a dataset that is not from the FBI as we found that they undercount the deaths per capita in their dataset. 
@@ -65,15 +44,3 @@ https://www.trainingreform.org/state-police-training-requirements (we can use th
 https://www.trainingreform.org/the-data (more state data) 
 
 
-Design of app: 
-https://policeviolencereport.org/ (this works for the victims of police brutality) 
-
-
-Questions: 
-Are we focusing on a national scale or Washington state? 
-Is our sole focus on police training -> police brutality or should we look into other factors such as racism or entitlement? 
-
-In another direction, we can look at the race of police officers in a state vs the race of the victims. 
-Is there a clear correspondence that may lead us to believe that there may be a racially biased-motive?
-https://bjs.ojp.gov/topics/crime/hate-crime
-https://www.justice.gov/hatecrimes/hate-crime-statistics
