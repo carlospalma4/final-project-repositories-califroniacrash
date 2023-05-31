@@ -1,0 +1,105 @@
+---
+title: "Changes in police brutality and training 2013-2022"
+output: html_document
+date: "2023-05-17"
+---
+
+```{r setup, include=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+source("police.r")
+```
+
+# Story # 1: Police Brutality in the US, within regions and states. Comparing and contrasting the region with the highest increase and highest decrease in police brutality incidents from the 2013-2017 period to the 2018-2022 period
+Overall, there has been a 11% increase in police brutality incidents in the US from the 2013-2017 period to the 2018-2022 period. This trend is also reflected in the regional level, as almost all regions have experienced significant increases or stayed relatively the same.
+
+```{r Change in total incidents (per million) by region, echo = FALSE}
+plot(incidents_region_change)
+```
+
+The Rockies is the region with the most notable increase in incidents (50 percent points), with all states experiencing an increase, the lowest being Montana with 24 percent points, and the highest Wyoming with 76 percent points
+
+```{r Change in total incidents (per million) within the Rockies, echo=FALSE}
+plot(incidents_rockies_change)
+```
+ 
+ On the contrary, the Mid-Atlantic is the region with the greatest percentage decrease in incidents (28 percent points), with all states experiencing a decrease in incidents, the lowest being Pennsylvania and Virginia 2 percent points, and the highest being Delaware 50 percent points. 
+ 
+ ```{r Change in total incidents (per million) within the Mid-Atlantic, echo = FALSE}
+ plot(incidents_mid_change)
+ ```
+ 
+ The percentage difference between the states with most and least change across both regions (52 percentage points and 48 percentage points respectively), shows a widespread trend of highly uneven distributions of incident changes both present in the national level and regional level.
+
+# Story # 2: Examining the state of new Mexico and zooming out to regional and national incidents
+
+New Mexico is the state with the highest number of police brutality incidents per million in the nation (59). 
+
+```{r }
+plot(incidents_barplot)
+```
+
+As shown in the previous section, the region of the South West is ranked first among the regions with respect to average number of incidents per million. 
+
+It is worth pondering about the possible causes for this phenomenon, and for that reason, it is reasonable to examine the possible relationship between police training (specifically the number of hours in total) and number of police brutality incidents in the entire nation. 
+
+During the period of 2013-2017 there doesn't seem to be much of a relationship between both factors. 
+```{r , echo = FALSE}
+plot(training_vs_incidents_2013)
+```
+
+However, the period of 2018-2022 suggests a more linear relationship between the factors: number of police brutality incidents decreasing as total training hours increases (albeit moderate).
+
+```{r , echo = FALSE}
+plot(training_vs_incidents_2018)
+```
+
+Perhaps this could be attributed to changes in the total duration of training between both periods. It might be worth considering how this has changed for every state in this period of time. 
+
+```{r }
+plot(training_change_barplot)
+```
+
+New Mexico ranks thirty-seventh place within the states with the most increase in total training time (experiencing a slight 1.4 hour drop). It might be worth widening the scope to a regional level. 
+
+```{r }
+plot(training_change_region_barplot)
+```
+
+This seems strange, as it turns out that the South West is the second region with the most increase in total training, averaging 84 hours. This suggests that although there seems to be a negative correlation between total training time and number of police brutality incidents, other factors might be more determinant and therefore, potential solutions to the problem should target other aspects of training. 
+
+# Story # 3: Maine as an outlier and factors that altered its status
+
+In the 2013-2022 period, the only state that was an outlier (with police incidents significantly higher than those of other states in its region) regarding police incidents per million within all regions was Maine. However, for the 2018-2022 period it dropped significantly by 15% and stopped being an outlier within the Mid-Atlantic region, even falling to the lower quartiles. 
+
+```{r Distribution of incidents per region (2013-2017), echo = FALSE}
+plot(incidents_region_2013)
+```
+
+```{r Distribution of incidents per region (2018-2022), echo = FALSE}
+plot(incidents_region_2018)
+```
+
+It could be interesting to examine how police training in the state of Maine changed between periods, as it became the eighth state with the highest decrease in police brutality incidents per million in the nation (dropping 15 percentage points)
+
+```{r }
+plot(change_barplot)
+```
+
+Police training in the state of Maine has experienced a notable change in the levels of stress that recruits are subject to (higher stress meaning that training is of military type as opposed to academic), becoming the eight state in the nation with the greatest decrease. 
+
+```{r , echo = FALSE}
+plot(stress_barplot)
+```
+
+It also has seen a significant increase in the number of hours of training dedicated to stress management at the personal level, ranking second in the nation as it saw a 10 hour average increase.
+```{r, echo=FALSE}
+plot(stress_man_barplot)
+```
+
+And finally, the state has moved on from no academies offering training in identification and response to excessive use of force by other officers to all academies doing it, becoming the state with the greatest increase in this aspect.
+
+```{r , echo=FALSE}
+plot(force_id_barplot)
+```
+
+These changes suggest that a decrease in the stress levels experienced by recruits in their academies, added to an increase in training related to stress management skills at the personal level, and increased training in identification and response to excessive use of force by other officers could potentially be associated with a decrease in incidents of police brutality, and as such, may represent potential remedies for the problem.  
