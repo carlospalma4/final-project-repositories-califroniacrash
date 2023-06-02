@@ -3,6 +3,15 @@ library(plotly)
 
 source("police.r")
 
+# controls <- sidebarPanel(
+#   h1("Control Panel"),
+#   selectInput(
+#     inputId = "state_name",
+#     label = "Select a State",
+#     choices = agg_df$state
+#   )
+# )
+
 note_map_1 <- sidebarPanel(
   wellPanel(
     p("")
@@ -14,8 +23,16 @@ note_map_2 <- sidebarPanel(
     p("")
   )
 )
-
-
+map_view <- tabPanel("Map", plotlyOutput(outputId = "map_2013"), plotlyOutput(outputId = "map_2018"))
+ controls <- sidebarPanel(
+     h1("Control Panel"),
+     selectInput(
+       inputId = "state_name",
+       label = "Select a State",
+       choices = agg_df$state
+     )
+ )
+ table_view <- tabPanel("Table", controls, tableOutput(outputId = "df_res_3"), tableOutput(outputId = "df_res_8"))
 
 
 about <- tabPanel("About",
@@ -23,24 +40,18 @@ about <- tabPanel("About",
                   sidebarLayout(
                     note_map_1,
                     mainPanel(
-                      plotlyOutput("map_2013")
+                      tabsetPanel(
+                    map_view,
+                    table_view
+                      )
                     )
                   ),
-                  sidebarLayout(
-                    note_map_2,
-                    mainPanel(
-                      plotlyOutput("map_2018")
-                    )
-                  )
-)
-
-controls <- sidebarPanel(
-  h1("Control Panel"),
-  selectInput(
-    inputId = "state_name",
-    label = "Select a State",
-    choices = agg_df$state
-  )
+                  # sidebarLayout(
+                  #   note_map_2,
+                  #   mainPanel(
+                  #     plotlyOutput("map_2018")
+                  #   )
+                  # )
 )
 
 note_line_1 <- sidebarPanel(
@@ -129,8 +140,6 @@ note_bar_7 <- sidebarPanel(
   )
 )
 
-table_view <- tabPanel("Table", tableOutput(outputId = "df_res"))
-
 compare <- tabPanel("Overview",
                     fluidPage(
                      h1("How police violence incidents have changed over time"),
@@ -154,15 +163,7 @@ compare <- tabPanel("Overview",
                        mainPanel(
                          plotlyOutput("lineplot_mid")
                        )
-                     ),
-                    titlePanel("State"),
-                     sidebarLayout(
-                     controls,
-                     #note_line_1,
-                     mainPanel(
-                               table_view
-                    )
-                    )
+                     )
                     )
 )
 
@@ -180,14 +181,32 @@ relation <- tabPanel("Police training and incidents",
                      p("As shown in the previous section, the region of the South West is ranked first among the regions with respect to average number of incidents per million. This might suggest a possible relation between police training and police brutlity incidents. Therefore, it is reasonable to examine the average total duration of training across different states and the number of incidents occured."),
                      p("This plot comparing the number of incidents per million and the number of hours of training in the 2013-2017 period does not suggest much of a relationship between both factors"),
                      sidebarLayout(
-                       note_scatter_1,
+                       sidebarPanel(
+                         h3("Controls"),
+                         sliderInput(
+                           inputId = "inc_per",
+                           label = "Filter by number of incidents per million per state",
+                           min = 0,
+                           max = 60,
+                           value = 60
+                         )
+                         ), 
                        mainPanel(
                          plotlyOutput("scatter_2013")
                        )
                      ),
                      p("However, the period of 2018-2022 suggests a more linear relationship between the factors: number of police brutality incidents decreasing as total training hours increases (albeit moderate)."),
                      sidebarLayout(
-                       note_scatter_2,
+                       sidebarPanel(
+                         h3("Controls"),
+                         sliderInput(
+                           inputId = "inc_per_1",
+                           label = "Filter by number of incidents per million per state",
+                           min = 0,
+                           max = 60,
+                           value = 60
+                         )
+                       ), 
                        mainPanel(
                          plotlyOutput("scatter_2018")
                        )
@@ -265,10 +284,15 @@ ui <- navbarPage("An analysis of police violence and training",
 )
 
 server <- function(input, output) {
-  output$df_res <- renderTable({
-    state_info <- select(agg_df, state, incidents_2013, Population_2017, incidents_2013_per_1000000, incidents_2018, Population_2022, incidents_2018_per_1000000)
+  output$df_res_3 <- renderTable({
+    state_info <- select(agg_df, state, incidents_2013, Population_2017, incidents_2013_per_1000000)
     state_info <- state_info[state_info$state == input$state_name, ]
     return(state_info)
+  })
+  output$df_res_8 <- renderTable({
+    state_info_1 <- select(agg_df, state, incidents_2018, Population_2022, incidents_2018_per_1000000)
+    state_info_1 <- state_info_1[state_info_1$state == input$state_name, ]
+    return(state_info_1)
   })
   output$lineplot_reg <- renderPlotly({
     line1 <- ggplot(data = incidents_region_change_df, aes(x = Year, y = round(incidents_region))) +
@@ -292,38 +316,54 @@ server <- function(input, output) {
   })
   
   output$barplot_us <- renderPlotly({
-    bar_1 <- ggplot(data = agg_df, aes(x = incidents_2018_per_1000000, y = reorder(state, incidents_2018_per_1000000)))+
+    bar_1 <- ggplot(data = agg_df, aes(x = incidents_2018_per_1000000, y = reorder(state, incidents_2018_per_1000000), text = paste(
+      "Incidents:", round(incidents_2018_per_1000000, 1))))+
       geom_bar(stat = 'identity') +
       labs(x = "Total incidents per million (2018-2022)", y = "State")
-    return(bar_1)
+    bar_1p <- ggplotly(bar_1, tooltip = "text")
+    return(bar_1p)
   })
   
   output$scatter_2013 <- renderPlotly({
-    scatter_1 <- ggplot(data = agg_df, aes(x = (median_training_2013), y = incidents_2013_per_1000000)) +
+    filt_df <- agg_df[agg_df$incidents_2013_per_1000000 <= input$inc_per, ]
+    scatter_1 <- ggplot(data = filt_df, aes(x = (median_training_2013), y = incidents_2013_per_1000000, text = paste(
+      paste("State:", state),
+      paste("Incidents", round(incidents_2013_per_1000000, 1)),
+      paste("Training duration", round(median_training_2013, 1), "h"), sep = "\n"))) +
       geom_point(aes(col = Region)) +
       labs(x = "Training duration (in hours)", y = "Incidents per million (2013-2017)")
-      return(scatter_1)
+      scatter_1p <- ggplotly(scatter_1, tooltip = "text")
+      return(scatter_1p)
   })
   
   output$scatter_2018 <- renderPlotly({
-    scatter_2 <- ggplot(data = agg_df, aes(x = (mean_training_2018), y = incidents_2018_per_1000000)) +
+    filt_df_1 <- agg_df[agg_df$incidents_2018_per_1000000 <= input$inc_per_1, ]
+    scatter_2 <- ggplot(data = filt_df_1, aes(x = (mean_training_2018), y = incidents_2018_per_1000000, text = paste(
+      paste("State:", state),
+      paste("Incidents", round(incidents_2018_per_1000000, 1)),
+      paste("Training duration", round(mean_training_2018, 1), "h"), sep = "\n"))) +
       geom_point(aes(col = Region)) + 
-      labs(x = "Training duration (in hours)", y = "Incidents per million (2018-2022)")
-      return(scatter_2)
+      labs(x = "Training duration (in hours)", y = "Incidents per million (2018-2022)") 
+      scatter_2p <- ggplotly(scatter_2, tooltip = "text")
+      return(scatter_2p)
   })
   
   output$barplot_train <- renderPlotly({
-    bar_2 <- ggplot(data = agg_df, aes(x = mean_training_2018 - median_training_2013, y = reorder(state, mean_training_2018 - median_training_2013)))+
+    bar_2 <- ggplot(data = agg_df, aes(x = mean_training_2018 - median_training_2013, y = reorder(state, mean_training_2018 - median_training_2013), text = paste(
+      "Duration change:", round(mean_training_2018 - median_training_2013, 1))))+
       geom_bar(stat = 'identity') +
       labs(x = "Change of total duration of training (in hours)", y = "State")
-    return(bar_2)
+    bar_2p <- ggplotly(bar_2, tooltip = "text")    
+    return(bar_2p)
   })
   
   output$barplot_train_reg <- renderPlotly({
-    bar_3 <- ggplot(data = train_reg, aes(x = mean_training, y = reorder(Region, mean_training)))+
+    bar_3 <- ggplot(data = train_reg, aes(x = mean_training, y = reorder(Region, mean_training), text = paste(
+      "Duration change:", round(mean_training, 1))))+
       geom_bar(stat = 'identity') +
       labs(x = "Change in total duration of training (in hours)", y = "Region")
-    return(bar_3)
+    bar_3p <- ggplotly(bar_3, tooltip = "text")
+    return(bar_3p)
   })
   
   output$boxplot_2013 <- renderPlotly({
@@ -341,10 +381,12 @@ server <- function(input, output) {
   })
   
   output$barchart_inc_change <- renderPlotly({
-    bar_4 <- ggplot(data = change_incidents_us_df, aes(x = change, y = reorder(states_vec, change))) +
+    bar_4 <- ggplot(data = change_incidents_us_df, aes(x = change, y = reorder(states_vec, change), text = paste(
+      "Percent change:", round(change, 1)))) +
       geom_bar(stat = 'identity') +
       labs(x = "Percent change in incidents per million (2013-2017 - 2018-2022)", y = "State")
-    return(bar_4)
+    bar_4p <- ggplotly(bar_4, tooltip = "text")
+    return(bar_4p)
   })
   
   output$barchart_stress <- renderPlotly({
@@ -369,7 +411,7 @@ server <- function(input, output) {
   })
   output$map_2013 <- renderPlotly({
     us_2013 <- plot_usmap(data = agg_2013, values = "Incidents") + 
-      scale_fill_continuous(low = "white", high = "blue", name = "Incidents per million (2013)", label = scales::comma, limits = c(3, 60)) + 
+      scale_fill_continuous(low = "white", high = "blue", name = "Incidents per million (2013)", label = scales::comma, limits = c(0, 60)) + 
       theme(legend.position = "right") 
       #geom_text(aes(label = State, hjust = -0.1, vjust = -0.3))
     
@@ -384,7 +426,7 @@ server <- function(input, output) {
   
   output$map_2018 <- renderPlotly({
     us_2018 <- plot_usmap(data = agg_2018, values = "Incidents") + 
-      scale_fill_continuous(low = "white", high = "blue", name = "Incidents per million (2013)", label = scales::comma, limits = c(3, 60)) + 
+      scale_fill_continuous(low = "white", high = "blue", name = "Incidents per million (2018)", label = scales::comma, limits = c(0, 60)) + 
       theme(legend.position = "right") 
     return(us_2018)
   })
