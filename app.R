@@ -12,17 +12,6 @@ source("police.r")
 #   )
 # )
 
-note_map_1 <- sidebarPanel(
-  wellPanel(
-    p("")
-  )
-)
-
-note_map_2 <- sidebarPanel(
-  wellPanel(
-    p("")
-  )
-)
 map_view <- tabPanel("Map", plotlyOutput(outputId = "map_2013"), plotlyOutput(outputId = "map_2018"))
  controls <- sidebarPanel(
      h1("Control Panel"),
@@ -37,119 +26,39 @@ map_view <- tabPanel("Map", plotlyOutput(outputId = "map_2013"), plotlyOutput(ou
 
 about <- tabPanel("About",
                   h1("About this project"),
+                  p("Concern and anger about instances of police brutality and wrongful executions by law enforcement in the United States have grown in recent years. Numerous rallies, petitions, and demands for change have been made in response to these tragedies. The disproportionate impact of police violence on black minority communities, a pattern that has continued since the late 1900s, is one specific cause for worry. Each year, thousands of people, mostly from marginalized backgrounds, are affected as a result of these interactions, leaving their loved ones in a great deal of pain and anguish. The data’s main goal is to determine whether a significant contributing factor to the disproportionately high rate of violent interactions between law enforcement and citizens is inadequate police training."),
+
+p("The training dataset that is used is sourced from the National Archive of Criminal Justice Data. Alongside, a dataset for every police violence case from 2013 to 2023 was found. The goal was to find a training dataset for every year from 2013 to 2022, but the Census of State and Local Law Enforcement Training Academies is only held every five years, resulting in only having 2013 and 2018. Therefore, starting from 2013, we use police violence data and correlate it with the census data taken in 2013 for the next five years up to 2018. Then, the same is done with 2018 data all the way up to 2022 to see if there is any noticeable change between those years."),
+
+p("Our data on police violence is sourced from the Mapping Police Violence Organization. Municipal and state governments, as well as publicly available media, are used as sources. The website claims that a key resource for locating news media allegations of police abuse is Google News. Any mention of police violence between 2013 and 2023 is gathered in the dataset.  Access to the data is made possible through the website and downloaded files. The website shows a number of graphic representations to help users understand the data. The dataset contains 11,354 rows that list all fatalities from 2013 through 2023. There are also 68 columns containing details about the officer, including their name, gender, race, date of birth, street address, city, state, responsible agency, cause of death, and whether or not the officer was charged. The usage of this dataset contributes greatly to this research’s goal, to see if there is a positive correlation between police brutality and police training. In our dataset’s case we mainly used the column that showed the number of incidents."), 
+
+p("The Census of State and Local Law Enforcement Training Academies includes two datasets, one from 2013 and one from 2018. They provide valuable insights into the required police training across different states, including the number of training hours and the specific types of training mandated for law enforcement professionals. By examining these two datasets, we hope to determine if variations in training requirements have any correlation with rates of police brutality. We aim to complement our findings by cross-referencing the data with a second set of datasets, also with an addition of analyzing the fatalities per state."),
+
+            p("Our analysis will focus particularly on identifying specific years when significant changes occurred in police training requirements. Numbers that are shown as also by incidents per million. By examining these pivotal moments, we aim to discern the potential impact of altered training protocols on incidents of police brutality. By merging the datasets and delving into the detailed training requirements imposed by each state, we aspire to gain a deeper understanding of the underlying factors contributing to the rise in police brutality. Through our data analysis, we intend to provide a more nuanced perspective on the relationship between police training and the occurrence of such incidents."),
                   sidebarLayout(
-                    note_map_1,
+                    p(""),
                     mainPanel(
                       tabsetPanel(
                     map_view,
                     table_view
                       )
                     )
-                  ),
-                  # sidebarLayout(
-                  #   note_map_2,
-                  #   mainPanel(
-                  #     plotlyOutput("map_2018")
-                  #   )
-                  # )
+                  )
 )
 
 note_line_1 <- sidebarPanel(
   wellPanel(
   h5("Note:"),
-  p("This graph (and all lineplots in this page) depicts the average number of incidents per state within each region"),
-  p("It does not show the number of incidents per year, but the points 2013 and 2018 instead represent the periods of 2013-2017 and 2018-2022 respectively.")
+  p("This graph (and all lineplots in this page) does not show the number of incidents per million year, but the points 2013 and 2018 instead represent the periods of 2013-2017 and 2018-2022 respectively.")
   )
 )
 
-note_line_2 <- sidebarPanel(
-  wellPanel(
-    p("")
-  )
-)
-
-note_line_3 <- sidebarPanel(
-  wellPanel(
-    p("")
-  )
-)
-
-note_bar_1 <- sidebarPanel(
-  wellPanel(
-    p("")
-  )
-)
-
-note_scatter_1 <- sidebarPanel(
-  wellPanel(
-    p("")
-  )
-)
-
-note_scatter_2 <- sidebarPanel(
-  wellPanel(
-    p("")
-  )
-)
-
-note_bar_2 <- sidebarPanel(
-  wellPanel(
-    p("")
-  )
-)
-
-note_bar_3 <- sidebarPanel(
-  wellPanel(
-    p("")
-  )
-)
-
-note_box_1 <- sidebarPanel(
-  wellPanel(
-    p("")
-  )
-)
-
-note_box_2 <- sidebarPanel(
-  wellPanel(
-    p("")
-  )
-)
-
-note_bar_4 <- sidebarPanel(
-  wellPanel(
-    p("")
-  )
-)
-
-note_bar_5 <- sidebarPanel(
-  wellPanel(
-    p("")
-  )
-)
-
-note_bar_6 <- sidebarPanel(
-  wellPanel(
-    p("")
-  )
-)
-
-note_bar_7 <- sidebarPanel(
-  wellPanel(
-    p("")
-  )
-)
 
 compare <- tabPanel("Overview",
                     fluidPage(
                      h1("How police violence incidents have changed over time"),
                      h6("Overall, there has been a 11% increase in police brutality incidents in the US from the 2013-2017 period to the 2018-2022 period. This trend is also reflected in the regional level, as almost all regions have experienced significant increases or stayed relatively the same."),
-                     sidebarLayout(
-                       note_line_1,
-                      mainPanel(
-                        plotlyOutput("lineplot_reg")
-                     )
-                     ),
+                        plotlyOutput("lineplot_reg"),
                      p("The Rockies is the region with the most notable increase in incidents (50 percent points), with all states experiencing an increase, the lowest being Montana with 24 percent points, and the highest Wyoming with 76 percent points"),
                          plotlyOutput("lineplot_roc"),
                      p("On the contrary, the Mid-Atlantic is the region with the greatest percentage decrease in incidents (28 percent points), with all states experiencing a decrease in incidents, the lowest being Pennsylvania and Virginia 2 percent points, and the highest being Delaware 50 percent points."),
@@ -201,11 +110,11 @@ relation <- tabPanel("Police training and incidents",
                          plotlyOutput("barplot_train"),
                      p("Yet analysis proves inconsequential, as New Mexico barely experienced any changes in training duration (save for an 1.4 hour drop). We might get a clearer picture if we zoomed out to the regional level."),
                          plotlyOutput("barplot_train_reg"),
-                     p("This seems strange, as it turns out that the South West is the second region with the most increase in total training, averaging 84 hours. Simply increasing the duration of training might not be a significant solution to the problem of police brutality as it does not seem applicable to regional/state levels, so it might be worth considering how other factors of police training mey have affected this phenomenon in a particular state.")
+                     p("This seems strange, as it turns out that the South West (where New Mexico belongs) is the second region with the most increase in total training, averaging 84 hours. Simply increasing the duration of training might not be a significant solution to the problem of police brutality as it does not seem applicable to regional/state levels, so it might be worth considering how other factors of police training mey have affected this phenomenon in a particular state.")
                      )
 )
 
-factors <- tabPanel("Possible remedies",
+factors <- tabPanel("Possible solutions",
                     fluidPage(
                     h1("Analyzing the state of Maine"),
                     p("In the 2013-2022 period, the only state that was an outlier (with police incidents significantly higher than those of other states in its region) regarding police incidents per million within all regions was Maine. However, for the 2018-2022 period it dropped significantly by 15% and stopped being an outlier within the Mid-Atlantic region, even falling to the lower quartiles."),
@@ -234,11 +143,19 @@ server <- function(input, output) {
   output$df_res_3 <- renderTable({
     state_info <- select(agg_df, state, incidents_2013, Population_2017, incidents_2013_per_1000000)
     state_info <- state_info[state_info$state == input$state_name, ]
+    colnames(state_info)[1] <- "State"
+    colnames(state_info)[2] <- "Incidents 2013-2017"
+    colnames(state_info)[3] <- "Population 2017"
+    colnames(state_info)[4] <- "Incidents per million 2013-2017"
     return(state_info)
   })
   output$df_res_8 <- renderTable({
     state_info_1 <- select(agg_df, state, incidents_2018, Population_2022, incidents_2018_per_1000000)
     state_info_1 <- state_info_1[state_info_1$state == input$state_name, ]
+    colnames(state_info_1)[1] <- "State"
+    colnames(state_info_1)[2] <- "Incidents 2018-2022"
+    colnames(state_info_1)[3] <- "Population 2022"
+    colnames(state_info_1)[4] <- "Incidents per million 2018-2022"
     return(state_info_1)
   })
   output$lineplot_reg <- renderPlotly({
@@ -326,6 +243,7 @@ server <- function(input, output) {
   output$boxplot_2018 <- renderPlotly({
     box_2 <- ggplot(data = agg_df, aes(x = Region, y = incidents_2018_per_1000000)) +
       geom_boxplot() +
+      #geom_text(aes(label = ifelse(state == ME, state, ""))) +
       labs(y = "Incidents per million (2018-2022)")
     return(box_2)
   })
