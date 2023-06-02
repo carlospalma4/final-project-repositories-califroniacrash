@@ -151,19 +151,10 @@ compare <- tabPanel("Overview",
                      )
                      ),
                      p("The Rockies is the region with the most notable increase in incidents (50 percent points), with all states experiencing an increase, the lowest being Montana with 24 percent points, and the highest Wyoming with 76 percent points"),
-                     sidebarLayout(
-                       note_line_2,
-                       mainPanel(
-                         plotlyOutput("lineplot_roc")
-                       )
-                     ),
+                         plotlyOutput("lineplot_roc"),
                      p("On the contrary, the Mid-Atlantic is the region with the greatest percentage decrease in incidents (28 percent points), with all states experiencing a decrease in incidents, the lowest being Pennsylvania and Virginia 2 percent points, and the highest being Delaware 50 percent points."),
-                     sidebarLayout(
-                       note_line_3,
-                       mainPanel(
-                         plotlyOutput("lineplot_mid")
-                       )
-                     )
+                         plotlyOutput("lineplot_mid"),
+                    
                     )
 )
 
@@ -172,12 +163,7 @@ relation <- tabPanel("Police training and incidents",
                      fluidPage(
                      h1("Exploring the state of New Mexico"),
                      p("New Mexico is the state with the highest number of police brutality incidents per million in the nation (59)."),
-                     sidebarLayout(
-                       note_bar_1,
-                       mainPanel(
-                         plotlyOutput("barplot_us")
-                       )
-                     ),
+                         plotlyOutput("barplot_us"),
                      p("As shown in the previous section, the region of the South West is ranked first among the regions with respect to average number of incidents per million. This might suggest a possible relation between police training and police brutlity incidents. Therefore, it is reasonable to examine the average total duration of training across different states and the number of incidents occured."),
                      p("This plot comparing the number of incidents per million and the number of hours of training in the 2013-2017 period does not suggest much of a relationship between both factors"),
                      sidebarLayout(
@@ -212,19 +198,9 @@ relation <- tabPanel("Police training and incidents",
                        )
                      ),
                      p("Perhaps this could be attributed to changes in the total duration of training between both periods. It might be worth considering how this has changed for every state in this period of time. It could be expected that New Mexico experienced a significant decrease in this regard following the possible negative correlation between the mentioned factors."),
-                     sidebarLayout(
-                       note_bar_2,
-                       mainPanel(
-                         plotlyOutput("barplot_train")
-                       )
-                     ),
+                         plotlyOutput("barplot_train"),
                      p("Yet analysis proves inconsequential, as New Mexico barely experienced any changes in training duration (save for an 1.4 hour drop). We might get a clearer picture if we zoomed out to the regional level."),
-                     sidebarLayout(
-                       note_bar_3,
-                       mainPanel(
-                         plotlyOutput("barplot_train_reg")
-                       )
-                     ),
+                         plotlyOutput("barplot_train_reg"),
                      p("This seems strange, as it turns out that the South West is the second region with the most increase in total training, averaging 84 hours. Simply increasing the duration of training might not be a significant solution to the problem of police brutality as it does not seem applicable to regional/state levels, so it might be worth considering how other factors of police training mey have affected this phenomenon in a particular state.")
                      )
 )
@@ -233,45 +209,16 @@ factors <- tabPanel("Possible remedies",
                     fluidPage(
                     h1("Analyzing the state of Maine"),
                     p("In the 2013-2022 period, the only state that was an outlier (with police incidents significantly higher than those of other states in its region) regarding police incidents per million within all regions was Maine. However, for the 2018-2022 period it dropped significantly by 15% and stopped being an outlier within the Mid-Atlantic region, even falling to the lower quartiles."),
-                    sidebarLayout(
-                      note_box_1,
-                      mainPanel(
-                        plotlyOutput("boxplot_2013")
-                      )
-                    ),
-                    sidebarLayout(
-                      note_box_2,
-                      mainPanel(
-                        plotlyOutput("boxplot_2018")
-                      )
-                    ), 
+                        plotlyOutput("boxplot_2013"),
+                        plotlyOutput("boxplot_2018"), 
                     p("It could be interesting to examine how police training in the state of Maine changed between periods, as it became the eighth state with the highest decrease in police brutality incidents per million in the nation (dropping 15 percentage points)."),
-                    sidebarLayout(
-                      note_bar_4,
-                      mainPanel(
-                        plotlyOutput("barchart_inc_change")
-                      )
-                    ),
+                        plotlyOutput("barchart_inc_change"),
                     p("Police training in the state of Maine has experienced a notable change in the levels of stress that recruits are subject to (higher stress meaning that training is of military type as opposed to academic), becoming the eight state in the nation with the greatest decrease."),
-                    sidebarLayout(
-                      note_bar_5,
-                      mainPanel(
-                        plotlyOutput("barchart_stress")
-                      )
-                    ),
+                        plotlyOutput("barchart_stress"),
                     p("It also has seen a significant increase in the number of hours of training dedicated to stress management at the personal level, ranking second in the nation as it saw a 10 hour average increase."),
-                    sidebarLayout(
-                      note_bar_6,
-                      mainPanel(
-                        plotlyOutput("barchart_man")
-                      )
-                    ),
+                        plotlyOutput("barchart_man"),
                     p("And finally, the state has moved on from no academies offering training in identification and response to excessive use of force by other officers to all academies doing it, becoming the state with the greatest increase in this aspect."),
-                    sidebarLayout(
-                      note_bar_7,
-                      mainPanel(
-                        plotlyOutput("barchart_exc"))
-                    ),
+                        plotlyOutput("barchart_exc"),
                     p("These changes suggest that a decrease in the stress levels experienced by recruits in their academies, added to an increase in training related to stress management skills at the personal level, and increased training in identification and response to excessive use of force by other officers could potentially be associated with a decrease in incidents of police brutality, and as such, may represent potential remedies for the problem.")
                     )
                   )
@@ -295,24 +242,27 @@ server <- function(input, output) {
     return(state_info_1)
   })
   output$lineplot_reg <- renderPlotly({
-    line1 <- ggplot(data = incidents_region_change_df, aes(x = Year, y = round(incidents_region))) +
+    line1 <- ggplot(data = incidents_region_change_df, aes(x = Year, y = incidents_region)) +
     geom_line(aes(col = Region)) +
     labs(y = "Average incidents (per million)", col = "Region")
-  return(line1)
+    line1_p <- ggplotly(line1, tootltip = "text")
+    return(line1_p)
   })
   
   output$lineplot_roc <- renderPlotly({
-    line2 <- ggplot(data = rockies_df, aes(x = Year, y = round(incidents_per_1000000))) +
+    line2 <- ggplot(data = rockies_df, aes(x = Year, y = incidents_per_1000000)) +
       geom_line(aes(col = state)) +
       labs(y = "Average incidents (per million)", col = "State")
-    return(line2)
+    line2_p <- ggplotly(line2, tootltip = "text")
+    return(line2_p)
   })
   
   output$lineplot_mid <- renderPlotly({
-    line3 <- ggplot(data = mid_atl_df, aes(x = Year, y = round(incidents_per_1000000))) +
+    line3 <- ggplot(data = mid_atl_df, aes(x = Year, y = incidents_per_1000000)) +
       geom_line(aes(col = state)) +
       labs(y = "Average incidents (per million)", col = "State")
-    return(line3)
+    line3_p <- ggplotly(line3, tootltip = "text")
+    return(line3_p)
   })
   
   output$barplot_us <- renderPlotly({
@@ -390,24 +340,30 @@ server <- function(input, output) {
   })
   
   output$barchart_stress <- renderPlotly({
-    bar_5 <- ggplot(data = agg_df, aes(x = mean_stress_2018 - mean_stress_2013, y = reorder(state, mean_stress_2018 - mean_stress_2013)))+
+    bar_5 <- ggplot(data = agg_df, aes(x = mean_stress_2018 - mean_stress_2013, y = reorder(state, mean_stress_2018 - mean_stress_2013), text = paste(
+      "Change:", round(mean_stress_2018 - mean_stress_2013, 1))))+
       geom_bar(stat = 'identity') + 
       labs(x = "Change in stress levels experienced by recruits in training (1-5 scale)", y = "state")
-    return(bar_5)
+    bar_5p <- ggplotly(bar_5, tooltip = "text")
+    return(bar_5p)
   })
   
   output$barchart_man <- renderPlotly({
-    bar_6 <- ggplot(data = agg_df, aes(x = median_stress_man_2018 - median_stress_man_2013, y = reorder(state, median_stress_man_2018 - median_stress_man_2013))) +
+    bar_6 <- ggplot(data = agg_df, aes(x = median_stress_man_2018 - median_stress_man_2013, y = reorder(state, median_stress_man_2018 - median_stress_man_2013), text = paste(
+      "Change:", round(median_stress_man_2018 - median_stress_man_2013, 1)))) +
       geom_bar(stat = 'identity') +
       labs(x = "Change in training dedicated to stress management skills (in hours)", y = "state")
-      return(bar_6)
+    bar_6p <- ggplotly(bar_6, tooltip = "text")  
+    return(bar_6p)
   })
   
   output$barchart_exc <- renderPlotly({
-    bar_7 <- ggplot(data = agg_df, aes(x = mean_force_id_2018 - mean_force_id_2013, y = reorder(state, mean_force_id_2018))) +
+    bar_7 <- ggplot(data = agg_df, aes(x = mean_force_id_2018 - mean_force_id_2013, y = reorder(state, mean_force_id_2018), text = paste(
+      "Duration change:", round(mean_force_id_2018 - mean_force_id_2013, 1)))) +
       geom_bar(stat = 'identity') +
       labs(x = "Change in proportion of academies that offer training in identification of excessive use of force", y = "State")
-      return(bar_7)
+      bar_7p <- ggplotly(bar_7, tooltip = "text")
+    return(bar_7p)
   })
   output$map_2013 <- renderPlotly({
     us_2013 <- plot_usmap(data = agg_2013, values = "Incidents") + 
