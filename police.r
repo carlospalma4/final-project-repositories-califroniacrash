@@ -2,8 +2,8 @@ library(dplyr)
 library(stringr)
 library(ggplot2)
 library(ggstatsplot)
-library(rstatix)
-library(tibble)
+library(usmap)
+
 
 # Loading the dataframes
 df_1 <- read.csv("Mapping Police Violence.csv")
@@ -12,6 +12,7 @@ df_3 <- read.csv("2018-Data.csv")
 df_4 <- read.csv("USAregions.csv")
 df_5 <- read.csv("2013 Population.csv")
 df_6 <- read.csv("2018 Population.csv")
+df_7 <- read.csv("us-state-capitals.csv")
 
 violence <- df_1
 df_train_2013 <- df_2
@@ -19,6 +20,7 @@ df_train_2018 <- df_3
 regions_df <- df_4
 pop_2013 <- df_5
 pop_2018 <- df_6
+capitals <- df_7
 
 pop_2013 <- tail(pop_2013, 58)
 pop_2013 <- head(pop_2013, 51)
@@ -376,3 +378,64 @@ plot(incidents_barplot)
 plot(training_change_barplot)
 plot(training_change_region_barplot)
 plot(stress_barplot)
+
+capitals[nrow(capitals) + 1, ] <- list("District of Columbia", "District of Columbia", 38.905985, -77.033418)
+capitals$state <- state.abb[match(capitals$name, state.name)]
+capitals_1 <- select(capitals, state, latitude, longitude)
+
+#agg_alter <- merge(x = agg_df, y = capitals_1, by = "state", all = TRUE)
+
+
+agg_df$State <- state.name[match(agg_df$state, state.abb)]
+agg_red <- select(agg_df, State, incidents_2013_per_1000000)
+
+agg_tibble <- as_tibble(agg_red)
+agg_tibble <- agg_tibble[order(agg_tibble$State), ]
+agg_tibble$fips <- statepop$fips
+agg_tibble$abbr <- statepop$abbr 
+
+us_2013 <- plot_usmap(data = agg_tibble,
+           values = "incidents_2013_per_1000000",
+           labels = TRUE)
+plot(us_2013)
+
+#us <- st_read("States_shapefile.shp", stringsAsFactors = FALSE)
+# us <- sf::st_read(system.file("shape/us.shp", package = "sf"),
+#                   quiet = TRUE)
+# ggt <- ggplot(us) +
+#   geom_sf(aes(fill = incidents_2013_per_1000000, label = state)) +
+#   scale_fill_viridis_c()
+# 
+# plot(ggplotly(ggt))
+
+# plot_ly(agg_df,
+#   color = ~incidents_2013_per_1000000,
+#   split = ~info,
+#   showlegend = FALSE,
+#   alpha = 1,
+#   type = "scatter",
+#   mode = "lines",
+#   hoverinfo = "text")
+
+# US <- filter(map_data("states") , region=="USA")
+# # 
+# # US[nrow(US) + 1, ] <- list()
+# 
+# p <- ggplot() +
+#   geom_polygon(data = US, aes(x=long, y = lat, group = group), fill="grey", alpha = 0.3) +
+#   geom_point( data=agg_alter, aes(x=longitude, y=latitude, size=incidents_2013_per_1000000, color=incidents_2013_per_1000000)) +
+#   scale_size_continuous(range=c(1,12)) +
+#   scale_color_viridis(trans="log") +
+#   theme_void() + coord_map()
+# 
+# plot(p)
+
+#agg <- arrange(agg_df)
+
+agg_2013 <- agg_df
+colnames(agg_2013)[4] <- "Incidents"
+agg_2013$Incidents <- round(agg_2013$Incidents, 1)
+
+agg_2018 <- agg_df
+colnames(agg_2018)[16] <- "Incidents"
+agg_2018$Incidents <- round(agg_2018$Incidents, 1)
